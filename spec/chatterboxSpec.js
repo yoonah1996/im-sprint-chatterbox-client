@@ -91,7 +91,8 @@ describe("chatterbox", () => {
 
     describe("DOM 조작 메소드", () => {
       it("clearMessages라는 메소드는 DOM에서 메시지를 지웁니다", () => {
-        document.querySelector("#chats").innerHTML = "<div>not blank</div>";
+        document.querySelector("#chats").innerHTML =
+          "<div>app.clearMessages가 작동하지 않습니다.</div>";
 
         app.clearMessages();
         expect(document.querySelector("#chats").children.length).to.equal(0);

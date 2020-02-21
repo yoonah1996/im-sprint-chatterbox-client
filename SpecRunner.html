@@ -14,6 +14,15 @@
         window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run();
       });
     </script>
+    <style>
+      #testarea {
+        padding: 20px;
+      }
+      #chats {
+        border: 1px solid gray;
+        padding: 20px;
+      }
+    </style>
 
     <!-- Spec files -->
     <script src="spec/chatterboxSpec.js"></script>
@@ -24,6 +33,7 @@
   <body>
     <div id="mocha"></div>
     <div id="testarea">
+      아래는 DOM 조작 메소드를 테스트하는 영역입니다.
       <div id="chats"></div>
     </div>
   </body>

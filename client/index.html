@@ -1,20 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>chatterbox</title>
-    <link rel="stylesheet" href="styles/styles.css" />
-  </head>
-  <body>
-    <div id="main">
-      <h1>chatterbox</h1>
-    </div>
 
-    <!-- #chats 엘리먼트의 id는 바꾸지 마세요 -->
-    <div id="chats">
-      <!-- 자유롭게 HTML을 작성하세요 -->
-    </div>
+<head>
+  <meta charset="utf-8" />
+  <title>chatterbox</title>
+  <link rel="stylesheet" href="styles/styles.css" />
+  <style type="text/css">
+    .my-box {
+      border: 1px solid;
+      padding: 10px;
+    }
+  </style>
+</head>
 
-    <script src="scripts/app.js"></script>
-  </body>
+<body>
+  <div id="main">
+    <h1>chatterbox</h1>
+    <!-- 선택창 -->
+    <div>
+      <span>Room:</span> &nbsp; <select>
+        <option>선택</option>
+      </select>
+    </div>
+    <!-- 검색창 -->
+    <div>
+      <input type="text" placeholder="검색어 입력">
+      <button>submit</button>
+    </div>
+  </div>
+  <!-- #chats 엘리먼트의 id는 바꾸지 마세요 -->
+  <div id="chats">
+    <!--목록 (이름, 메세지)-->
+    <div class="my-box">
+      <!--이름-->
+      <span>룰루</span>
+      <!--메세지-->
+      <div>ㅎㅎㅎㅎㅎㅎ</div>
+    </div>
+  </div>
+  
+  <script src="scripts/app.js"></script>
+</body>
+
 </html>

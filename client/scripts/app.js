@@ -3,6 +3,7 @@ const app = {
   server: "http://52.78.206.149:3000/messages",
 };
 
+
 app.init = function(){
 
 }
@@ -40,7 +41,7 @@ app.send = function(message){
   .then(response => {
     return response.json();
   //}).then(myPostJson => {
-  //  console.log(JSON.stringify(myPostJson));
+    //console.log(JSON.stringify(myPostJson));
   }).catch(err => {
     //console.log(err);
     return err;

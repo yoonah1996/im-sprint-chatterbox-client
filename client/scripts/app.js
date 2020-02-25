@@ -9,20 +9,21 @@ app.init = function(){
 
 //서버에 GET요청 제출
 app.fetch = function(){
-  return fetch(app.server, {
+  var result = [];
+  fetch(app.server, {
     method: 'get',
   })
   .then(response => {
     return response.json();
   }).then(myJson  => {
-    // console.log(JSON.parse(JSON.stringify(myJson)));
-    return (JSON.parse(JSON.stringify(myJson)));
-  }).then(value =>{
-    return value.__proto__.PromiseValue;
+    result.push(JSON.parse(JSON.stringify(myJson)));
+    // console.log(result);
+    return result;
   }).catch(err  => {
     // console.log(err);
     return err;
   })
+  return result;
 }
 
 // function submitClick(){
@@ -33,16 +34,16 @@ app.fetch = function(){
 
 var clicks = document.getElementById('submit');
 clicks.addEventListener('click', function(){
-  // let newArr = app.fetch();
+  // app.fetch();
   // let room = newArr.map(el => el.roomname);
+  // newArr.forEach(function(el){
+  //   console.log(el.roomname);
+  // })
   // console.log(newArr);
 })
 
 
 let message = {
-    username: "룰루",
-    text: "나의 채팅 메시지",
-    roomname: "로비" 
 }
 
 //서버에 POST요청 제출

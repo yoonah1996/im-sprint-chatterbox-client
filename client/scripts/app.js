@@ -3,9 +3,7 @@ const app = {
   server: "http://52.78.206.149:3000/messages",
 };
 
-app.init = function () {
-
-}
+app.init = function () { }
 
 //서버에 GET요청 제출 (방이름)
 app.fetch = function () {
@@ -33,12 +31,51 @@ app.fetch = function () {
         return acc;
       }, []);
       //렌더링 함수의 인자 값에 중복값 제거된 방 이름을 적용
-      result.forEach(el => app.renderMessage(el));
+      result.forEach(el => app.renderRoomName(el));
     })
     .catch(err => {
       return err;
     })
 }
+
+//서버에 POST요청 제출
+app.send = function (message) {
+  fetch(app.server, {
+    method: 'post',
+    body: JSON.stringify(message),
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => {
+      return err;
+    })
+}
+
+app.clearMessages = function () {
+  let target = document.querySelector('#chats');
+  while(target.hasChildNodes()){
+    target.removeChild(target.firstChild);
+  }
+}
+
+app.renderMessage = function (message) {
+  let newDiv = document.createElement('div');
+  newDiv.innerHTML = message;
+  document.querySelector('#chats').appendChild(newDiv);
+}
+
+
+//메소드는 DOM에 방 선택
+app.renderRoomName = function (roomName) {
+  let newDiv = document.createElement('option');
+  newDiv.innerHTML = roomName;
+  document.querySelector('#select').appendChild(newDiv);
+}
+
 
 //서버에서 유저네임, 메세지, 날짜를 가져와 랜더링 해주는 함수
 app.addSns = function () {
@@ -60,6 +97,7 @@ app.addSns = function () {
     })
 }
 
+
 //호출을 통해 처음 화면에 글 목록이 뜰 수 있게 함
 app.addSns();
 //호출을 통해 처음 선택창에 방 이름이 뜰 수 있게 함
@@ -74,7 +112,7 @@ submitClick.addEventListener('click', function () {
   message['text'] = document.querySelector('#messageInput').value;
   message['roomname'] = document.querySelector('#select').value;
   message['date'] = new Date();
-  if(message.username === '' || message.text === ''){
+  if (message.username === '' || message.text === '') {
     alert('이름과 메시지를 입력하세요!');
     return;
   }
@@ -85,32 +123,6 @@ submitClick.addEventListener('click', function () {
   document.querySelector('#nameInput').value = '';
   document.querySelector('#messageInput').value = '';
 })
-
-
-//서버에 POST요청 제출
-app.send = function (message) {
-  fetch(app.server, {
-    method: 'post',
-    body: JSON.stringify(message),
-    headers: {
-      "Content-Type": "application/json",
-    }
-  })
-    .then(response => {
-      return response.json();
-    })
-    .catch(err => {
-      return err;
-    })
-}
-
-
-//messageData라는 클래스 이름을 가진 앨리먼트 모두 삭제
-app.clearMessages = function () {
-  //fetch API로 변경해야될듯..?
-  let messageData = document.querySelectorAll('.messages')
-  messageData.forEach(el => el.remove());
-}
 
 
 //글 보여주기
@@ -137,13 +149,6 @@ app.renderSns = function (name, sns, date) {
   document.querySelector('.my-box').prepend(outDiv);
 }
 
-//메소드는 DOM에 방 선택
-app.renderMessage = function (roomName) {
-  //fetch API로 변경해야될듯..?
-  let newDiv = document.createElement('option');
-  newDiv.innerHTML = roomName;
-  document.querySelector('#select').appendChild(newDiv);
-}
 
 app.filtering = function (roomName) {
   return fetch(app.server, {
@@ -166,19 +171,26 @@ app.filtering = function (roomName) {
     })
 }
 
+//messageData라는 클래스 이름을 가진 앨리먼트 모두 삭제
+app.clearMessageForFilter = function () {
+  //fetch API로 변경해야될듯..?
+  let messageData = document.querySelectorAll('.messages')
+  messageData.forEach(el => el.remove());
+}
+
 //방 이름 필터링 이벤트
 let filterRoomName = document.getElementById('select');
 filterRoomName.addEventListener('change', function () {
   let roomName = document.getElementById('select').value;
-  app.clearMessages();
+  app.clearMessageForFilter();
   app.filtering(roomName);
 })
 
 //방 만들기 기능 함수
 let makeRoomButton = document.getElementById('roomSub');
-makeRoomButton.addEventListener('click', function(){
+makeRoomButton.addEventListener('click', function () {
   let roomName = document.getElementById('roomMake').value;
-  app.renderMessage(roomName);
+  app.renderRoomName(roomName);
 })
 
 

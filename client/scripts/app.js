@@ -15,13 +15,28 @@ app.fetch = function(){
   })
   .then(response => {
     return response.json();
-  //}).then(myJson  => {
-  // console.log(JSON.stringify(myJson));
+  }).then(myJson  => {
+    // console.log(JSON.parse(JSON.stringify(myJson)));
+    return (JSON.parse(JSON.stringify(myJson)));
   }).catch(err  => {
-    //console.log(err);
+    // console.log(err);
     return err;
   })
 }
+
+// function submitClick(){
+//   let newArr = app.fetch();
+//   // let room = newArr.map(el => el.roomname);
+//   console.log(newArr);
+// }
+
+var clicks = document.getElementById('submit');
+clicks.addEventListener('click', function(){
+  // app.fetch();
+  // let room = newArr.map(el => el.roomname);
+  // console.log(app.fetch());
+})
+
 
 let message = {
     username: "룰루",

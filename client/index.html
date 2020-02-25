@@ -7,8 +7,14 @@
   <link rel="stylesheet" href="styles/styles.css" />
   <style type="text/css">
     .my-box {
+      width: 470px; 
+      height: 30px;
       border: 1px solid;
       padding: 10px;
+    }
+    #messageInput{
+      width: 400px; 
+      height: 30px;
     }
   </style>
 </head>
@@ -18,13 +24,18 @@
     <h1>chatterbox</h1>
     <!-- 선택창 -->
     <div>
-      <span>Room:</span> &nbsp; <select>
-        <option>선택</option>
+      <span>Room:</span> &nbsp; <select id='choice'>
+        <!--<option>선택</option>-->
       </select>
+      <input type="text" placeholder = "방만들기" id="roomMake">
+      <button id='roomSub'>만들기</button>
     </div>
-    <!-- 검색창 -->
+    <br> 
+    <!-- 입력창 -->
     <div>
-      <input type="text" placeholder="검색어 입력">
+      <input type="text" placeholder="이름" id = "nameInput">
+      <br>
+      <input type="text" placeholder="입력창" id = "messageInput">
       <button id='submit'>submit</button>
     </div>
   </div>
@@ -33,10 +44,11 @@
     <!--목록 (이름, 메세지)-->
     <div class="my-box">
       <!--이름-->
-      <span>룰루</span>
-      <!--메세지-->
-      <div>ㅎㅎㅎㅎㅎㅎ</div>
+      <!-- <span>룰루</span>
+      메세지
+      <div>ㅎㅎㅎㅎㅎㅎ</div> -->
     </div>
+    <br>
   </div>
   <!-- <script>
   function submitClick(){

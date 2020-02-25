@@ -9,7 +9,7 @@ app.init = function(){
 
 //서버에 GET요청 제출
 app.fetch = function(){
-  fetch(app.server, {
+  return fetch(app.server, {
     method: 'get',
   })
   .then(response => {
@@ -17,6 +17,8 @@ app.fetch = function(){
   }).then(myJson  => {
     // console.log(JSON.parse(JSON.stringify(myJson)));
     return (JSON.parse(JSON.stringify(myJson)));
+  }).then(value =>{
+    return value.__proto__.PromiseValue;
   }).catch(err  => {
     // console.log(err);
     return err;
@@ -31,9 +33,9 @@ app.fetch = function(){
 
 var clicks = document.getElementById('submit');
 clicks.addEventListener('click', function(){
-  // app.fetch();
+  // let newArr = app.fetch();
   // let room = newArr.map(el => el.roomname);
-  // console.log(app.fetch());
+  // console.log(newArr);
 })
 
 

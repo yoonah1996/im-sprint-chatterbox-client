@@ -10,8 +10,11 @@
       border: 1px solid;
       padding: 10px;
     }
+    #messageInput{
+      width: 400px; 
+      height: 30px;
+    }
   </style>
-  <script src="scripts/app.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -19,13 +22,16 @@
     <h1>chatterbox</h1>
     <!-- 선택창 -->
     <div>
-      <span>Room:</span> &nbsp; <select>
-        <option>선택</option>
+      <span>Room:</span> &nbsp; <select id='choice'>
+        <!--<option>선택</option>-->
       </select>
     </div>
-    <!-- 검색창 -->
+    <br> 
+    <!-- 입력창 -->
     <div>
-      <input type="text" placeholder="검색어 입력">
+      <input type="text" placeholder="이름" id = "nameInput">
+      <br>
+      <input type="text" placeholder="입력창" id = "messageInput">
       <button id='submit'>submit</button>
     </div>
   </div>
@@ -38,6 +44,7 @@
       <!--메세지-->
       <div>ㅎㅎㅎㅎㅎㅎ</div>
     </div>
+    <br>
   </div>
   <!-- <script>
   function submitClick(){

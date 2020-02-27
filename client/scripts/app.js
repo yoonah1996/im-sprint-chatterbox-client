@@ -82,7 +82,7 @@ submitClick.addEventListener('click', function () {
   message['text'] = document.querySelector('#messageInput').value;
   message['roomname'] = document.querySelector('#choice').value;
   console.log(message);
-  app.send(message);
+  // app.send(message);
   app.addSns();
   //app.fetch();
   // app.renderMessage(app.fetch());

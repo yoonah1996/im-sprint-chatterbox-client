@@ -1,219 +1,139 @@
-/* eslint-disable no-console */
+// eslint-disable-next-line
 const app = {
   server: "http://52.78.206.149:3000/messages",
+  // init : function() {
+  //   app.fetch();  
+  // }
 };
-
-app.init = function () { }
-
-//서버에 GET요청 제출 (방이름)
-app.fetch = function () {
-  return fetch(app.server, {
-    method: 'get',
-  })
-    .then(response => {
-      return response.json();
-    }).then(myJson => {
-      let arr = [];
-      //arr.push(JSON.parse(JSON.stringify(myJson)));
-      arr.push(myJson);
-      return arr;
-    }).then(value => {
-      //roomname 목록만 배열로 추출
-      let mapValue = value[0].map(function (ele) {
-        return ele.roomname;
-      })
-      //중복값 제거
-      let result = mapValue.sort().reduce((acc, curr) => {
-        let length = acc.length;
-        if (length === 0 || acc[length - 1] !== curr) {
-          acc.push(curr);
-        }
-        return acc;
-      }, []);
-      //렌더링 함수의 인자 값에 중복값 제거된 방 이름을 적용
-      result.forEach(el => app.renderRoomName(el));
-    })
-    .catch(err => {
-      return err;
-    })
+// 초기 화면 실행 함수
+app.init = function () {
+  app.fetch();
 }
 
-//서버에 POST요청 제출
-app.send = function (message) {
+//자료를 받는 함수.
+app.fetch = function (inputroomsel) {
+  //url에 접근하기 위한 메소드
+  if (inputroomsel) {
+    app.server = app.server + "/?roomname=" + inputroomsel;
+  }
   fetch(app.server, {
-    method: 'post',
+    method: 'GET'
+  })
+    .then(res => {
+      return res.json();
+    }).then(json => {
+      json.forEach((ele) => {
+        app.renderMessage(ele.username, ele.text, ele.roomname);
+      })
+      let roomObj = { "전체보여주기" : "전체보여주기"};
+      json.forEach((ele) => {
+        if (!roomObj[ele.roomname]) {
+          roomObj[ele.roomname] = ele.roomname;
+        }
+      })
+      if (!inputroomsel) {
+        app.renderList(roomObj);
+      }
+    })
+  app.server = "http://52.78.206.149:3000/messages";
+}
+
+//자료를 보내는 함수
+app.send = function (userName, textValue, roomName) {
+  let message = {
+    username: userName,
+    text: textValue,
+    roomname: roomName
+  };
+  // console.log(message);
+
+  fetch(app.server, {
+    method: 'POST',
     body: JSON.stringify(message),
     headers: {
       "Content-Type": "application/json",
     }
   })
-    .then(response => {
-      return response.json();
+    .then(res => {
+      return res.json();
     })
-    .catch(err => {
-      return err;
+    .then(()=>{
+      app.clearMessages();
+      app.fetch(roomName);
     })
+  
+  //메세지창에 글 입력하고 submit 버튼을 누르면
+  //message가 chats에 추가되어야 된다
+
+  //class이름이 text인 엘리먼트의 value를 message 객체의 text의 값으로 받고?
+  //class이름이 username인 엘리먼트의 value를 message 객체의 username의 값으로 받고?
+  //class이름이 roomname인 엘리먼트의 value를 message 객체의 roomname의 값으로 받고?
 }
+
 
 app.clearMessages = function () {
+  //지우고
   let target = document.querySelector('#chats');
-  while(target.hasChildNodes()){
-    target.removeChild(target.firstChild);
-  }
+  target.innerHTML = '';
 }
 
-app.renderMessage = function (message) {
-  let newDiv = document.createElement('div');
-  newDiv.innerHTML = message;
-  document.querySelector('#chats').appendChild(newDiv);
+app.renderMessage = function (username, text, roomname) { 
+  //불러오기
+  //데이터를 각 엘리먼트에 넣어줘야됨
+  let newUl = document.createElement('ul');
+  let newDivForName = document.createElement('div');
+  let newDivForText = document.createElement('div');
+  let newDivForDate = document.createElement('div');
+  newDivForName.innerHTML = username;
+  newDivForText.innerHTML = text;
+  newDivForDate.innerHTML = roomname;
+  newUl.appendChild(newDivForName);
+  newUl.appendChild(newDivForText);
+  newUl.appendChild(newDivForDate);
+  newDivForName.className = 'username';
+  newDivForText.className = 'text';
+  newDivForDate.className = 'roomname';
+  document.querySelector('#chats').prepend(newUl);
 }
 
-
-//메소드는 DOM에 방 선택
-app.renderRoomName = function (roomName) {
-  let newDiv = document.createElement('option');
-  newDiv.innerHTML = roomName;
-  document.querySelector('#select').appendChild(newDiv);
-}
-
-
-//서버에서 유저네임, 메세지, 날짜를 가져와 랜더링 해주는 함수
-app.addSns = function () {
-  return fetch(app.server, {
-    method: 'get',
-  }).then(response => {
-    return response.json();
-  }).then(myJson => {
-    let arr = [];
-    arr.push(myJson);
-    //arr.push(JSON.parse(JSON.stringify(myJson)));
-    //console.log(JSON.parse(JSON.stringify(myJson)));
-    return arr;
-  }).then(value => {
-    value[0].forEach(el => app.renderSns(el.username, el.text, el.date));
+//필터링 함수 만들어서
+app.renderList = function (roomObj) {
+  // 객체를 써서 객체.룸네임
+  let newArr = Object.keys(roomObj);
+  let roomcreat = document.querySelector('#roomList');
+  newArr.forEach(el => {
+    let newOption = document.createElement('option');
+    newOption.value = el;
+    newOption.text = el;
+    roomcreat.appendChild(newOption);
   })
-    .catch(err => {
-      return err;
-    })
+  // console.log(newArr);
 }
 
-
-//호출을 통해 처음 화면에 글 목록이 뜰 수 있게 함
-app.addSns();
-//호출을 통해 처음 선택창에 방 이름이 뜰 수 있게 함
-app.fetch();
-
-
-//submit 버튼을 누르면 입력한 메세지가 서버에 제출된다 (제출 + 글 목록에 추가)
-let submitClick = document.getElementById('submit');
-submitClick.addEventListener('click', function () {
-  let message = {};
-  message['username'] = document.querySelector('#nameInput').value;
-  message['text'] = document.querySelector('#messageInput').value;
-  message['roomname'] = document.querySelector('#select').value;
-  message['date'] = new Date();
-  if (message.username === '' || message.text === '') {
-    alert('이름과 메시지를 입력하세요!');
-    return;
-  }
-  app.send(message);
-  //렌더링할 때 인자값으로 date 속성 입력
-  app.renderSns(message.username, message.text, message.date);
-  //setTimeout(app.addSns(), 3000);
-  document.querySelector('#nameInput').value = '';
-  document.querySelector('#messageInput').value = '';
-})
-
-
-//글 보여주기
-app.renderSns = function (name, sns, date) {
-  //fetch API로 변경해야될듯..?
-  //ul태그로 변경: 순서가 필요없는 목록 표시할 때 사용
-  let outDiv = document.createElement('ul');
-  let newDiv = document.createElement('div');
-  let oupSns = document.createElement('div');
-  let oupDate = document.createElement('span');
-  outDiv.className = 'messages';
-  newDiv.className = 'userName';
-  //outDiv.setAttribute("style", "border: 2px solid black;");
-  newDiv.innerHTML = name;
-  oupSns.innerHTML = sns;
-  oupDate.innerHTML = date;
-  outDiv.appendChild(newDiv);
-  outDiv.appendChild(oupSns);
-  outDiv.appendChild(oupDate);
-  // document.querySelector('.my-box').appendChild(newDiv);
-  // document.querySelector('.my-box').appendChild(oupSns);
-  // document.querySelector('.my-box').appendChild(oupDate);
-  //prepend를 써서 최근 메세지가 상단에 위치하도록 함
-  document.querySelector('.my-box').prepend(outDiv);
-}
-
-
-app.filtering = function (roomName) {
-  return fetch(app.server, {
-    method: 'get',
+window.addEventListener("DOMContentLoaded", () => {
+  app.init();
+  let button = document.querySelector('#submit');
+  button.addEventListener("click", () => {
+    if(document.querySelector('#roomList').value === "전체보여주기" && !document.querySelector('#roomInput').value){
+      alert("룸네임이 선택되지 않았습니다. 선택하여 주세요")
+    }else{
+      app.send(document.querySelector('#inputName').value, document.querySelector('#inputText').value, document.querySelector('#roomInput').value);
+    }
+    // document.querySelector('#inputName').value = '';
+    // document.querySelector('#inputText').value ='';
   })
-    .then(response => {
-      return response.json();
-    }).then(myJson => {
-      let arr = [];
-      arr.push(myJson);
-      return arr;
-    }).then(value => {
-      value[0].forEach(function (ele) {
-        if (ele.roomname === roomName) {
-          app.renderSns(ele.username, ele.text, ele.date);
-        }
-      })
-    }).catch(err => {
-      return err;
-    })
-}
-
-//messageData라는 클래스 이름을 가진 앨리먼트 모두 삭제
-app.clearMessageForFilter = function () {
-  //fetch API로 변경해야될듯..?
-  let messageData = document.querySelectorAll('.messages')
-  messageData.forEach(el => el.remove());
-}
-
-//방 이름 필터링 이벤트
-let filterRoomName = document.getElementById('select');
-filterRoomName.addEventListener('change', function () {
-  let roomName = document.getElementById('select').value;
-  app.clearMessageForFilter();
-  app.filtering(roomName);
+  let roomsel = document.querySelector('#roomList');
+  roomsel.addEventListener("change", () => {
+    app.clearMessages();
+    if(document.querySelector('#roomList').value === "전체보여주기"){
+      document.querySelector('#roomInput').value = '';
+      app.fetch();
+    }else{
+      document.querySelector('#roomInput').value = document.querySelector('#roomList').value;
+      app.fetch(document.querySelector('#roomList').value);
+      
+    }
+  })
+  
 })
 
-//방 만들기 기능 함수
-let makeRoomButton = document.getElementById('roomSub');
-makeRoomButton.addEventListener('click', function () {
-  let roomName = document.getElementById('roomMake').value;
-  app.renderRoomName(roomName);
-})
-
-
-
-
-
-//선택창 버튼을 누르면 roomname이 나온다
-// let choiceClicks = document.getElementById('choice');
-// choiceClicks.addEventListener('click', function () {
-//   app.fetch();
-// })
-
-//방 이름으로 필터링
-// app.filterRoomName = function() {
-//   let roomName = document.getElementsByTagName('option').value;
-//   app.filtering(roomName);
-// }
-
-//선택창을 눌렀을때 선택창 랜더링
-// app.renderSelectRoom = function (roomName) {
-//   //fetch API로 변경해야될듯..?
-//   let targetEle = document.querySelector('#choice');
-//   let createOptionEle = document.createElement('option');
-//   targetEle.appendChild(createOptionEle);
-//   createOptionEle.innerHTML = roomName;
-// }

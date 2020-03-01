@@ -7,14 +7,38 @@
   <link rel="stylesheet" href="styles/styles.css" />
   <style type="text/css">
     .my-box {
-      width: 470px; 
-      height: 30px;
-      border: 1px solid;
+      width: 470px;
+      height: 500px;
       padding: 10px;
+      overflow: scroll;
     }
-    #messageInput{
-      width: 400px; 
+
+    #messageInput {
+      width: 400px;
       height: 30px;
+    }
+
+    /* #select {
+      width: 150px;
+      padding: .8em .5em; 
+      border: 1px solid ;
+      border-radius: 0px;
+    } */
+
+    .userName {
+      font-size: medium;
+      font-weight: bolder;
+    }
+
+    .messages {
+      height: 75px;
+      padding: 1%;
+      background-color: pink;
+      opacity: 0.6;
+    }
+
+    .buttonStyle {
+      padding: 5px;
     }
   </style>
 </head>
@@ -24,39 +48,27 @@
     <h1>chatterbox</h1>
     <!-- 선택창 -->
     <div>
-      <span>Room:</span> &nbsp; <select id='choice'>
-        <!--<option>선택</option>-->
-      </select>
-      <input type="text" placeholder = "방만들기" id="roomMake">
-      <button id='roomSub'>만들기</button>
+      <br>
+      <span>Room:</span> &nbsp;
+      <select id='select'></select>
+      <input type="text" placeholder="방만들기" id="roomMake">
+      <button id='roomSub' class="buttonStyle">만들기</button>
     </div>
-    <br> 
+    <br>
     <!-- 입력창 -->
     <div>
-      <input type="text" placeholder="이름" id = "nameInput">
+      <input type="text" placeholder="이름" id="nameInput">
       <br>
-      <input type="text" placeholder="입력창" id = "messageInput">
-      <button id='submit'>submit</button>
+      <input type="text" placeholder="입력창" id="messageInput">
+      <button id='submit' class="buttonStyle">submit</button>
     </div>
   </div>
   <!-- #chats 엘리먼트의 id는 바꾸지 마세요 -->
   <div id="chats">
     <!--목록 (이름, 메세지)-->
-    <div class="my-box">
-      <!--이름-->
-      <!-- <span>룰루</span>
-      메세지
-      <div>ㅎㅎㅎㅎㅎㅎ</div> -->
-    </div>
+    <div class="my-box"></div>
     <br>
   </div>
-  <!-- <script>
-  function submitClick(){
-    let newArr = app.fetch();
-    // let room = newArr.map(el => el.roomname);
-    console.log(newArr);
-  }
-  </script> -->
   <script src="scripts/app.js"></script>
 </body>
 

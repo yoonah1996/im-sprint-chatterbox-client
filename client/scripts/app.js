@@ -13,15 +13,17 @@ app.init = function () {
 //자료를 받는 함수.
 app.fetch = function (inputroomsel) {
   //url에 접근하기 위한 메소드
-  if (inputroomsel) {
+  if (inputroomsel) { 
     app.server = app.server + "/?roomname=" + inputroomsel;
   }
   fetch(app.server, {
     method: 'GET'
   })
     .then(res => {
+      // console.log(res.body);
       return res.json();
     }).then(json => {
+      // console.log(json);
       json.forEach((ele) => {
         app.renderMessage(ele.username, ele.text, ele.roomname);
       })
@@ -39,12 +41,8 @@ app.fetch = function (inputroomsel) {
 }
 
 //자료를 보내는 함수
-app.send = function (userName, textValue, roomName) {
-  let message = {
-    username: userName,
-    text: textValue,
-    roomname: roomName
-  };
+app.send = function (message) {
+  
   // console.log(message);
 
   fetch(app.server, {
@@ -58,8 +56,9 @@ app.send = function (userName, textValue, roomName) {
       return res.json();
     })
     .then(()=>{
+      // console.log(a);
       app.clearMessages();
-      app.fetch(roomName);
+      app.fetch(message.roomname);
     })
   
   //메세지창에 글 입력하고 submit 버튼을 누르면
@@ -93,8 +92,9 @@ app.renderMessage = function (username, text, roomname) {
   newDivForName.className = 'username';
   newDivForText.className = 'text';
   newDivForDate.className = 'roomname';
-  document.querySelector('#chats').prepend(newUl);
+  document.querySelector('#chats').prepend(newUl);  //prepend는 앞쪽에 붙인다   append는 뒷쪽에 붙인다
 }
+
 
 //필터링 함수 만들어서
 app.renderList = function (roomObj) {
@@ -110,18 +110,25 @@ app.renderList = function (roomObj) {
   // console.log(newArr);
 }
 
+let subButton = document.querySelector('#inputBtn');
+subButton.addEventListener("click", () => {
+  if(document.querySelector('#roomList').value === "전체보여주기" && !document.querySelector('#roomInput').value){
+    alert("룸네임이 선택되지 않았습니다. 선택하여 주세요")
+  }else{
+    let message = {
+      username: document.querySelector('#inputName').value,
+      text: document.querySelector('#inputText').value,
+      roomname:  document.querySelector('#roomInput').value
+    };
+    app.send(message);
+  }
+  // document.querySelector('#inputName').value = '';
+  // document.querySelector('#inputText').value ='';
+})
+
 window.addEventListener("DOMContentLoaded", () => {
   app.init();
-  let button = document.querySelector('#submit');
-  button.addEventListener("click", () => {
-    if(document.querySelector('#roomList').value === "전체보여주기" && !document.querySelector('#roomInput').value){
-      alert("룸네임이 선택되지 않았습니다. 선택하여 주세요")
-    }else{
-      app.send(document.querySelector('#inputName').value, document.querySelector('#inputText').value, document.querySelector('#roomInput').value);
-    }
-    // document.querySelector('#inputName').value = '';
-    // document.querySelector('#inputText').value ='';
-  })
+
   let roomsel = document.querySelector('#roomList');
   roomsel.addEventListener("change", () => {
     app.clearMessages();
